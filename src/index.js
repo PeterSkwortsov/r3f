@@ -1,17 +1,35 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Canvas } from '@react-three/fiber';
+import Experience from './Experience';
+import { CineonToneMapping } from 'three';
+import * as THREE from 'three'
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = createRoot(document.querySelector('#root'))
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <Canvas
+    // flat // Оно указывает, использовать ли THREE.NoToneMapping вместо THREE.ACESFilmicToneMapping
+    // dpr={[1,2]} // соотношение пикселей
+    gl={
+      { 
+        // toneMapping: CineonToneMapping,
+        outputEncoding: THREE.LinearEncoding
+       }
+    }
+      camera={{
+        fov: 45,
+        near: 0.1,
+        far: 200,
+        position: [-5,2,6]
+      }}
+    >
+       <Experience />
+    </Canvas>
+  
+
+
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
