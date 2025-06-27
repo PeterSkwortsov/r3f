@@ -1,10 +1,13 @@
 import { useRef } from "react"
-import { OrbitControls, TransformControls } from '@react-three/drei'
+import { OrbitControls, TransformControls, PivotControls, Html, Text, Float, MeshReflectorMaterial } from '@react-three/drei'
 
 export default function Experience() {
 
     const cubeRef = useRef()
+    const cubeRef2 = useRef()
     const groupRef = useRef()
+    const spherepRef = useRef()
+    const planepRef = useRef()
 
     // useFrame((state, delta) => {
 
@@ -33,28 +36,82 @@ export default function Experience() {
             wireframe={false}
             />
         </mesh>
-            <TransformControls object={cubeRef}/>
+            <mesh ref={cubeRef2} position = {[-5,2,1]} 
+        scale={1.5}>
+            <boxGeometry  />
+            <meshStandardMaterial color="blue" 
+            wireframe={false}
+            />
+        </mesh>
 
 
-        <mesh  position={[-3,-0.5,-3]} scale={1.5}>
+            <TransformControls object={cubeRef} mode="translate"/>
+
+            <PivotControls 
+            anchor={[0,1,0]}
+            depthTest = {false}
+            lineWidth={2}
+            axisColors={["#FF00FF", "#FF00FF", "#FF00FF"]}
+            fixed={true}
+            scale={120}
+            >
+            <mesh ref={spherepRef}  position-x={-2} scale={1.5}>
             <sphereGeometry position={[0, -2, 0]} />
                 <meshStandardMaterial
                 wireframe={false}
-                color='orange'
-            />
-        </mesh>
+                    color='orange'
+                />
+            <Html 
+            position={[1,1,1]}
+            wrapperClass="label"
+            center
+            distanceFactor={6}
+                        occlude={[cubeRef, cubeRef2, spherepRef]}
+
+            >Это сфера 👈</Html>
+            </mesh>
+        </PivotControls>
         </group>
 
-        <mesh rotation-x={-Math.PI / 2} position={[0, -2, 0]} scale={18.5}>
+        <mesh rotation-x={-Math.PI / 2} 
+        ref={planepRef} 
+        position={[0, -2, 0]} 
+        scale={28.5}>
             <planeGeometry position={[0, -2, 0]} />
-            <meshStandardMaterial
+            {/* <meshStandardMaterial
                 wireframe={false}
                 color='greenyellow'
+            /> */}
+           
+            <MeshReflectorMaterial 
+            resolution={512}
+            blur={[1000,1000]}
+            mixBlur={1}
+            mirror={0.7}
+            color='white'
             />
         </mesh>
 
-        {/* <CustomObject /> */}
+    <Float
+    speed={2}
+    floatIntensity={2}
+    >
+        <Text
+        // это Troika JS
+        color='salmon'
+            font="./Nunito-Italic-VariableFont_wght.ttf"
+        position={[0, 2,-5]}
+        scale={20}
+        maxWidth={1}
+        textAlign="center"
+        >
+            
+           Это возможности R3F
+        </Text>
+        </Float>
 
+
+        {/* <CustomObject /> */}
     
     </>
 }
