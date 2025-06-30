@@ -5,10 +5,12 @@ import { Canvas } from '@react-three/fiber';
 import Experience from './Experience';
 import { CineonToneMapping } from 'three';
 import * as THREE from 'three'
+import { StrictMode } from 'react';
 
 const root = createRoot(document.querySelector('#root'))
 
 root.render(
+  <StrictMode>
     <Canvas
     // flat // Оно указывает, использовать ли THREE.NoToneMapping вместо THREE.ACESFilmicToneMapping
     // dpr={[1,2]} // соотношение пикселей
@@ -27,7 +29,7 @@ root.render(
     >
        <Experience />
     </Canvas>
-  
+    </StrictMode>
 
 
 );

@@ -1,10 +1,21 @@
 import { useRef } from "react"
 import { OrbitControls, TransformControls, PivotControls, Html, Text, Float, MeshReflectorMaterial } from '@react-three/drei'
+import Cube from "./Cube"
+import { useControls } from "leva"
 
 export default function Experience() {
 
+    const {position} = useControls({
+        position: {
+            value: -2,
+            min: -10,
+            max: 10,
+            step: 0.01
+        }
+    })
+    console.log(position)
+
     const cubeRef = useRef()
-    const cubeRef2 = useRef()
     const groupRef = useRef()
     const spherepRef = useRef()
     const planepRef = useRef()
@@ -29,32 +40,26 @@ export default function Experience() {
 
     <group ref={groupRef}>
 
-        <mesh ref={cubeRef} position-x={2} rotation-y={30.85} 
+            <mesh ref={cubeRef} position-x={position} rotation-y={30.85} 
         scale={1.5}>
             <boxGeometry  />
             <meshStandardMaterial color="blue" 
             wireframe={false}
             />
         </mesh>
-            <mesh ref={cubeRef2} position = {[-5,2,1]} 
-        scale={1.5}>
-            <boxGeometry  />
-            <meshStandardMaterial color="blue" 
-            wireframe={false}
-            />
-        </mesh>
+           
 
+    <Cube scale={5}/>
 
             <TransformControls object={cubeRef} mode="translate"/>
 
-            <PivotControls 
             anchor={[0,1,0]}
             depthTest = {false}
             lineWidth={2}
             axisColors={["#FF00FF", "#FF00FF", "#FF00FF"]}
             fixed={true}
             scale={120}
-            >
+            
             <mesh ref={spherepRef}  position-x={-2} scale={1.5}>
             <sphereGeometry position={[0, -2, 0]} />
                 <meshStandardMaterial
@@ -66,11 +71,10 @@ export default function Experience() {
             wrapperClass="label"
             center
             distanceFactor={6}
-                        occlude={[cubeRef, cubeRef2, spherepRef]}
+                        occlude={[cubeRef, spherepRef]}
 
             >Это сфера 👈</Html>
             </mesh>
-        </PivotControls>
         </group>
 
         <mesh rotation-x={-Math.PI / 2} 
