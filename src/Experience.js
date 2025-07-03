@@ -1,38 +1,46 @@
-import { useRef } from "react"
-import { OrbitControls, TransformControls, PivotControls, Html, Text, Float, MeshReflectorMaterial } from '@react-three/drei'
+import { use, useRef } from "react"
+import { OrbitControls, TransformControls, Html, Text, Float, MeshReflectorMaterial } from '@react-three/drei'
 import Cube from "./Cube"
-import { useControls } from "leva"
+import { useControls, button} from "leva"
+import { Perf } from "r3f-perf"
+
 
 export default function Experience() {
 
-    const {position} = useControls({
+    const {perfVisable} = useControls('perf', {perfVisable: true})
+
+    const { position, color, visible } = useControls('sphery', {
         position: {
-            value: -2,
-            min: -10,
-            max: 10,
-            step: 0.01
-        }
+            value: {x: 1, y: 2},
+            step: 0.01,
+            joystick: 'invertY'
+        },
+        color: '#50c442',
+        visible: true,
+        clickMe: button(() => {
+            console.log('click')
+        }),
+        choise: { options: ['A', 'B', 'C'] }
     })
-    console.log(position)
 
     const cubeRef = useRef()
     const groupRef = useRef()
     const spherepRef = useRef()
     const planepRef = useRef()
 
-    // useFrame((state, delta) => {
+    const {scale} = useControls('cube', {
+        scale: {
+            value: 1.5,
+            step: 0.01,
+            min: 0,
+            max: 5
 
-    //     const angale = state.clock.elapsedTime * 0.2
-    //     state.camera.position.x = (Math.sin(angale * 0.5)) * 8
-    //     state.camera.position.z = (Math.cos(angale)) * 8
-    //     state.camera.lookAt(0,0,0)
-
-    //     cubeRef.current.rotation.y += delta 
-    //     groupRef.current.rotation.y += delta * 0.002
-    // })
+        }
+    })
 
     return <>
- 
+        {perfVisable ? <Perf position="top-left"/> : null}
+
     <OrbitControls makeDefault/>
 
     <directionalLight position={[1,2,3]} intensity={1.5}/>
@@ -40,31 +48,30 @@ export default function Experience() {
 
     <group ref={groupRef}>
 
-            <mesh ref={cubeRef} position-x={position} rotation-y={30.85} 
-        scale={1.5}>
-            <boxGeometry  />
-            <meshStandardMaterial color="blue" 
+    <mesh 
+    ref={cubeRef} 
+    position={[position.x, position.y, 0]}
+                scale={scale}
+                visible={visible}
+            >
+                <boxGeometry 
+            />
+                <meshStandardMaterial color={color}
             wireframe={false}
             />
         </mesh>
            
 
-    <Cube scale={5}/>
+    <Cube scale={2}/>
 
-            <TransformControls object={cubeRef} mode="translate"/>
-
-            anchor={[0,1,0]}
-            depthTest = {false}
-            lineWidth={2}
-            axisColors={["#FF00FF", "#FF00FF", "#FF00FF"]}
-            fixed={true}
-            scale={120}
+        
             
             <mesh ref={spherepRef}  position-x={-2} scale={1.5}>
             <sphereGeometry position={[0, -2, 0]} />
                 <meshStandardMaterial
                 wireframe={false}
                     color='orange'
+
                 />
             <Html 
             position={[1,1,1]}
