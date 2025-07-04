@@ -1,5 +1,5 @@
 import {  useRef } from "react"
-import { OrbitControls, Html, Text, Float, MeshReflectorMaterial, useHelper, BakeShadows, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Sky, Environment } from '@react-three/drei'
+import { OrbitControls, Html, Text, Float, MeshReflectorMaterial, useHelper, BakeShadows, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Sky, Environment, Lightformer } from '@react-three/drei'
 import Cube from "./Cube"
 import { Perf } from "r3f-perf"
 import * as THREE from 'three'
@@ -36,22 +36,47 @@ export default function Experience() {
     //     sunPosition: {value:[1,2,3]},
     // })
 
-    const { envMapIntensity } = useControls("environment", {
-      envMapIntensity: { value: 3.5, min: 0, max: 10 },
-    });
+    // const { envMapIntensity } = useControls("environment", {
+    //   envMapIntensity: { value: 3.5, min: 0, max: 10 },
+    // });
+
+    const {envMapIntensity, envMapHeight, envMapRadius, envMapScale} = useControls("environment map", 
+    {
+        envMapIntensity: {value: 7, min: 0, max: 12},
+        envMapHeight: {value: 7, min: 0, max: 100},
+        envMapRadius: {value: 28, min: 0, max: 1000},
+        envMapScale: {value: 100, min: 10, max: 1000},
+      
+    })
 
 
     return (
       <>
-        <Environment 
-        background 
-        // files={"./hdr/the_sky_is_on_fire_2k.hdr"}
+        <Environment
+          background
+          files={"./hdr/the_sky_is_on_fire_2k.hdr"}
+          ground={
+            {
+              height: envMapHeight,
+              radius: envMapRadius,
+              scale: envMapScale
+            }
+          }
         >
-          <mesh position-z={-5} scale={10}>
+          {/* <color args={["#746cff"]} attach="background"/>
+
+          <Lightformer position-z={-5}
+            scale={3}
+            intensity={100}
+            color='red'
+            form="ring"
+          {/* /> */}
+
+
+          {/* <mesh position-z={-5} scale={10}>
             <planeGeometry />
-            <meshBasicMaterial color='red'
-              />
-          </mesh>
+            <meshBasicMaterial color={[100,0,0]} />
+          </mesh> */}
         </Environment>
 
         <BakeShadows />
@@ -102,26 +127,23 @@ export default function Experience() {
         /> */}
         {/* <ambientLight ref={amberLight} intensity={0.02}/> */}
 
-        <group ref={groupRef}>
           <mesh
             ref={cubeRef}
             castShadow
-            position={[2, 1, 0]}
+            position={[2, 1, -10]}
             scale={1.5}
             visible={true}
           >
             <boxGeometry />
             <meshStandardMaterial
-              color={"blue"}
               wireframe={false}
               envMapIntensity={envMapIntensity}
             />
           </mesh>
 
-          <Cube scale={2} />
 
-          <mesh ref={spherepRef} castShadow position-x={-2} scale={1.5}>
-            <sphereGeometry position={[0, -2, 0]} />
+          <mesh ref={spherepRef} castShadow position-x={-5} position-z={-5} scale={1.5} position-y={1}>
+            <sphereGeometry />
             <meshStandardMaterial wireframe={false} color="orange" />
             <Html
               position={[1, 1, 1]}
@@ -133,46 +155,7 @@ export default function Experience() {
               Это сфера 👈
             </Html>
           </mesh>
-        </group>
 
-        <mesh
-          receiveShadow
-          rotation-x={-Math.PI / 2}
-          ref={planepRef}
-          position={[0, -2, 0]}
-          scale={15.5}
-        >
-          <planeGeometry position={[0, -1, 0]} />
-          <meshStandardMaterial
-            wireframe={false}
-            color="greenyellow"
-            envMapIntensity={envMapIntensity}
-          />
-
-          {/* <MeshReflectorMaterial
-            resolution={512}
-            blur={[1000, 1000]}
-            mixBlur={1}
-            mirror={0.7}
-            color="white"
-          /> */}
-        </mesh>
-
-        <Float speed={2} floatIntensity={2}>
-          <Text
-            // это Troika JS
-            color="salmon"
-            font="./Nunito-Italic-VariableFont_wght.ttf"
-            position={[0, 2, -5]}
-            scale={20}
-            maxWidth={1}
-            textAlign="center"
-          >
-            Это возможности R3F
-          </Text>
-        </Float>
-
-        {/* <CustomObject /> */}
       </>
     );
 }
