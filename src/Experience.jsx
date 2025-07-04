@@ -1,9 +1,10 @@
 import {  useRef } from "react"
-import { OrbitControls, Html, Text, Float, MeshReflectorMaterial, useHelper, BakeShadows, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows } from '@react-three/drei'
+import { OrbitControls, Html, Text, Float, MeshReflectorMaterial, useHelper, BakeShadows, SoftShadows, AccumulativeShadows, RandomizedLight, ContactShadows, Sky, Environment } from '@react-three/drei'
 import Cube from "./Cube"
 import { Perf } from "r3f-perf"
 import * as THREE from 'three'
 import { useFrame } from "@react-three/fiber"
+import { useControls } from "leva"
 
 
 export default function Experience() {
@@ -25,12 +26,38 @@ export default function Experience() {
         cubeRef.current.position.x = 2 + Math.sin(time);
     })
 
+    const {color, opacity, blur} = useControls('ContactShadows', {
+        color: '#000000',
+        opacity: {value: 0.5, min: 0, max: 1},
+        blur: {value: 0.5, min: 0, max: 1},
+    })
+
+    // const {sunPosition} = useControls('sky', {
+    //     sunPosition: {value:[1,2,3]},
+    // })
+
+    const { envMapIntensity } = useControls("environment", {
+      envMapIntensity: { value: 3.5, min: 0, max: 10 },
+    });
+
+
     return (
       <>
+        <Environment 
+        background 
+        // files={"./hdr/the_sky_is_on_fire_2k.hdr"}
+        >
+          <mesh position-z={-5} scale={10}>
+            <planeGeometry />
+            <meshBasicMaterial color='red'
+              />
+          </mesh>
+        </Environment>
+
         <BakeShadows />
 
         <Perf position="top-left" />
-
+        {/* <Sky sunPosition={sunPosition}/> */}
         <OrbitControls makeDefault />
         {/* <AccumulativeShadows
             position={[0, -0.99, 0]}
@@ -41,24 +68,27 @@ export default function Experience() {
             temporal
             blend={100}
         > */}
-            
-          <RandomizedLight
+
+        {/* <RandomizedLight
             amount={8}
             radius={1}
             ambient={0.5}
             intensity={0.5}
             position={[1, 2, 3]}
             bias={0.001}
-          />
+          /> */}
         {/* </AccumulativeShadows> */}
-        <ContactShadows 
-            position={[0, -0.99, 0]}
-            scale={10}
-            resolution={512}
-            far={5}
+        <ContactShadows
+          position={[0, -1.95, 0]}
+          scale={15}
+          resolution={512}
+          far={5}
+          color={color}
+          opacity={opacity}
+          blur={blur}
         />
 
-        <directionalLight
+        {/* <directionalLight
           ref={directionalLight}
           castShadow
           shadow-mapSize={[1024, 1024]}
@@ -67,9 +97,9 @@ export default function Experience() {
           shadow-camera-right={5}
           shadow-camera-bottom={-5}
           shadow-camera-left={-5}
-          position={[1, 5, 9]}
+          position={sunPosition}
           intensity={2.5}
-        />
+        /> */}
         {/* <ambientLight ref={amberLight} intensity={0.02}/> */}
 
         <group ref={groupRef}>
@@ -81,7 +111,11 @@ export default function Experience() {
             visible={true}
           >
             <boxGeometry />
-            <meshStandardMaterial color={"blue"} wireframe={false} />
+            <meshStandardMaterial
+              color={"blue"}
+              wireframe={false}
+              envMapIntensity={envMapIntensity}
+            />
           </mesh>
 
           <Cube scale={2} />
@@ -106,13 +140,14 @@ export default function Experience() {
           rotation-x={-Math.PI / 2}
           ref={planepRef}
           position={[0, -2, 0]}
-          scale={28.5}
+          scale={15.5}
         >
           <planeGeometry position={[0, -1, 0]} />
           <meshStandardMaterial
-                wireframe={false}
-                color='greenyellow'
-            />
+            wireframe={false}
+            color="greenyellow"
+            envMapIntensity={envMapIntensity}
+          />
 
           {/* <MeshReflectorMaterial
             resolution={512}
