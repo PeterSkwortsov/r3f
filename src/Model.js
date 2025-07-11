@@ -1,13 +1,20 @@
-import { useGLTF, MeshReflectorMaterial } from "@react-three/drei";
+import { useGLTF, MeshReflectorMaterial, Clone } from "@react-three/drei";
 import * as THREE from "three";
 
 export default function Model() 
 {
-    const model = useGLTF('/datsun-transformed.glb');
+    const model = useGLTF('/burger.glb');
   
     return <>
     
-        <primitive object={model.scene} scale={1} position-y={-1} />
+        {/* <Clone object={model.scene} scale={1} position-x={-4} position-y={-1} /> */}
+        <Clone object={model.scene} scale={0.5} position-x={0} position-y={-2}/>
+      
+        
+        
+        
+        
+        
         <mesh rotation-x={-Math.PI / 2}
             position={[0, -1.53, 0]}
             scale={28.5}>
@@ -24,8 +31,11 @@ export default function Model()
                 mirror={0.7}
                 color='orange'
                 side={THREE.DoubleSide}
-                
             />
+
+
+
+            
         </mesh>
     
     </>
