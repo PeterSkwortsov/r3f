@@ -1,18 +1,14 @@
-import { useRef, useState } from "react";
 import { OrbitControls } from "@react-three/drei";
-import Cube from "./Cube";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import { useLoader, Canvas, useThree } from "@react-three/fiber";
-import { useControls } from "leva";
+import { useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-
+import Model from "./Model";
+import { Suspense } from "react";
+import PlaceHolder from "./PlaceHolder";
 export default function Experience() {
-  const model = useLoader(GLTFLoader, "./burger.glb", (loader) => {
-    console.log("ура");
-  });
-  console.log(model);
-  const ref = useRef();
+
+
   return (
     <>
       <Perf position="top-left" />
@@ -21,16 +17,16 @@ export default function Experience() {
       <directionalLight castShadow position={[1, 2, 3]} intensity={1.5} />
       <ambientLight intensity={0.5} />
 
-      <mesh castShadow position-x={-2} scale={1.5}>
+      {/* <mesh castShadow position-x={-2} scale={1.5}>
         <sphereGeometry />
         <meshStandardMaterial color="mediumpurple" />
-      </mesh>
-      <mesh castShadow position-x={2}>
+      </mesh> */}
+      {/* <mesh castShadow position-x={2}>
         <boxGeometry />
         <meshStandardMaterial color="orange" />
-      </mesh>
+      </mesh> */}
 
-      <mesh
+      {/* <mesh
         receiveShadow
         rotation-x={-Math.PI * 0.3}
         position-y={-1.5}
@@ -41,12 +37,15 @@ export default function Experience() {
       >
         <planeGeometry />
         <meshStandardMaterial color="greenyellow" side={THREE.DoubleSide} />
-      </mesh>
+      </mesh> */}
 
-      <primitive object={model.scene} scale={0.45} position-z={-2} />
-
-
-      
+      <Suspense
+        fallback={
+          <PlaceHolder position-x={0.1}/>
+        }
+      >
+        <Model />
+      </Suspense>
     </>
   );
 }
