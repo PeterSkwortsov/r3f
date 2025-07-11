@@ -7,6 +7,7 @@ import Model from "./Model";
 import { Suspense } from "react";
 import PlaceHolder from "./PlaceHolder";
 import Hamburger from "./Hamburger";
+import Fox from "./Fox";
 
 export default function Experience() {
 
@@ -16,10 +17,13 @@ export default function Experience() {
       <Perf position="top-left" />
       <OrbitControls makeDefault />
 
-      <directionalLight castShadow position={[1, 2, 3]} intensity={2.5} shadow-normalBias={0.04} />
+      <directionalLight
+        castShadow
+        position={[1, 2, 3]}
+        intensity={2.5}
+        shadow-normalBias={0.04}
+      />
       <ambientLight intensity={0.5} />
-
-     
 
       <Suspense fallback={<PlaceHolder position-x={0.1} />}>
         <Hamburger position-y={-2} />
@@ -41,6 +45,8 @@ export default function Experience() {
           side={THREE.DoubleSide}
         />
       </mesh>
+
+      <Fox position-y={-2} castShadow />
     </>
   );
 }
