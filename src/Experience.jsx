@@ -6,16 +6,23 @@ import {
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+
 
 export default function Experience() {
 
-  // const [matcapTexture] = useMatcapTexture("7B5254_E9DCC7_B19986_C8AC91", 256);
-  // console.log(matcapTexture)
+  const donutsGroup = useRef();
+  
   const tempArray = [...Array(100)];
   const [torusGeometry, setTorusGeometry] = useState();
   
-
+  const donuts = useRef([]);
+  useFrame((state, delta) => {
+    for (const donut of donuts.current) {
+      donut.rotation.y += delta * 0.2;
+    }
+  });
 
   return (
     <>
@@ -44,21 +51,27 @@ export default function Experience() {
           Привет мир!
           <meshStandardMaterial color="green" />
         </Text3D>
-        {tempArray.map((value, index) => (
-          <mesh
-            geometry={torusGeometry}
-            key={index}
-            position={[
-              (Math.random() - 0.15) * 20,
-              (Math.random() - 0.5) * 10,
-              (Math.random() - 0.5) * 10,
-            ]}
-            scale={0.2 + Math.random() * 0.2}
-            rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
-          >
-            <meshStandardMaterial color="orange" />
-          </mesh>
-        ))}
+
+        <group res={donutsGroup}>
+          {tempArray.map((value, index) => (
+            <mesh
+              ref={(el) => (donuts.current[index] = el)}
+              geometry={torusGeometry}
+              key={index}
+              position={[
+                (Math.random() - 0.15) * 20,
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10,
+              ]}
+              scale={0.2 + Math.random() * 0.2}
+              rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
+            >
+              <meshStandardMaterial color="orange" />
+            </mesh>
+          ))}
+        </group>
+
+
       </Center>
     </>
   );
