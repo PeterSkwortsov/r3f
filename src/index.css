@@ -13,10 +13,10 @@ body,
 
 #root {
   position: relative;
-  padding: 2.5em;
+  padding:0.3rem;
 }
 
-body {
+body { 
   background: #f0f0f0;
   font-family: inter;
 }

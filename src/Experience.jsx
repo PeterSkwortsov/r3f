@@ -1,15 +1,20 @@
-import { OrbitControls, MeshReflectorMaterial } from "@react-three/drei";
+import {
+  OrbitControls,
+  Text3D,
+  useMatcapTexture,
+  Center,
+} from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import * as THREE from "three";
-import { useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import Model from "./Model";
-import { Suspense } from "react";
-import PlaceHolder from "./PlaceHolder";
-import Hamburger from "./Hamburger";
-import Fox from "./Fox";
+import { useState } from "react";
 
 export default function Experience() {
+
+  // const [matcapTexture] = useMatcapTexture("7B5254_E9DCC7_B19986_C8AC91", 256);
+  // console.log(matcapTexture)
+  const tempArray = [...Array(100)];
+  const [torusGeometry, setTorusGeometry] = useState();
+  
 
 
   return (
@@ -17,36 +22,44 @@ export default function Experience() {
       <Perf position="top-left" />
       <OrbitControls makeDefault />
 
-      <directionalLight
-        castShadow
-        position={[1, 2, 3]}
-        intensity={2.5}
-        shadow-normalBias={0.04}
-      />
-      <ambientLight intensity={0.5} />
+      <torusGeometry ref={setTorusGeometry} args={[1, 0.6, 16, 32]} />
 
-      <Suspense fallback={<PlaceHolder position-x={0.1} />}>
-        <Hamburger position-y={-2} />
-      </Suspense>
+      {/* <ambientLight intensity={0.5} /> */}
+      <directionalLight position={[1, 2, 3]} intensity={1.5} />
+      <directionalLight position={[-1, -2, -3]} intensity={1.5} />
 
-      <mesh
-        rotation-x={-Math.PI / 2}
-        position={[0, -1.53, 0]}
-        scale={28.5}
-        receiveShadow
-      >
-        <planeGeometry position={[0, -0.2, 0]} />
-        <meshStandardMaterial
-          resolution={512}
-          blur={[1000, 1000]}
-          mixBlur={1}
-          mirror={0.7}
-          color="orange"
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      <Fox position-y={-2} castShadow />
+      <Center>
+        <Text3D
+          font="./Nunito ExtraLight_Italic.json"
+          size={1.75}
+          // depth={1}
+          height={0.2}
+          curveSegments={12}
+          bevelEnabled
+          bevelThickness={0.02}
+          bevelSize={0.05}
+          bevelOffset={0.02}
+          bevelSegments={12}
+        >
+          Привет мир!
+          <meshStandardMaterial color="green" />
+        </Text3D>
+        {tempArray.map((value, index) => (
+          <mesh
+            geometry={torusGeometry}
+            key={index}
+            position={[
+              (Math.random() - 0.15) * 20,
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 10,
+            ]}
+            scale={0.2 + Math.random() * 0.2}
+            rotation={[Math.random() * Math.PI, Math.random() * Math.PI, 0]}
+          >
+            <meshStandardMaterial color="orange" />
+          </mesh>
+        ))}
+      </Center>
     </>
   );
 }

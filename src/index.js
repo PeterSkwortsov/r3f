@@ -19,7 +19,6 @@ root.render(
       }}
 
     >
-      <color args={['red']} attach="background"/>
        <Experience />
     </Canvas>
 
